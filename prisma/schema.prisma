@@ -1,0 +1,42 @@
+// Ini adalah file skema Prisma Anda.
+// Pelajari lebih lanjut di https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Mendefinisikan bahwa kita menggunakan ekosistem SQL (Postgres)
+  url      = env("DATABASE_URL")
+}
+
+// Model untuk Semester
+model Semester {
+  id     Int      @id @default(autoincrement())
+  name   String   // e.g., "Semester 1"
+  sks    Int      // Total SKS di semester ini
+  order  Int      @unique // Untuk pengurutan (1, 2, 3, ...)
+  courses Course[]
+}
+
+// Model untuk Mata Kuliah
+model Course {
+  id         Int        @id @default(autoincrement())
+  name       String     // e.g., "Bahasa Indonesia"
+  category   String     // Kategori warna (e.g., "wajib", "pilihan")
+  semester   Semester   @relation(fields: [semesterId], references: [id])
+  semesterId Int
+  materials  Material[]
+}
+
+// Model untuk Materi Pembelajaran
+model Material {
+  id       Int      @id @default(autoincrement())
+  title    String
+  // Tipe materi: 'PDF', 'LINK', 'TEXT', 'IMAGE'
+  type     String
+  // URL untuk PDF/LINK/IMAGE, atau konten langsung untuk TEXT
+  content  String
+  course   Course   @relation(fields: [courseId], references: [id])
+  courseId Int
+}

@@ -1,27 +1,12 @@
+/* src/app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Semua style kustom .course-card dan .bg-course-* TELAH DIPINDAHKAN ke src/app/page.module.css 
+*/
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+/* Anda bisa biarkan file ini kosong di bawah 3 baris @tailwind
+  atau tambahkan style global (cth: untuk font) jika perlu.
+*/

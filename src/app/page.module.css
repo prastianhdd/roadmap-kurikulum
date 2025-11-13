@@ -1,0 +1,77 @@
+/* src/app/page.module.css */
+
+/* --- Definisi Warna Kategori (DIMODIFIKASI) --- */
+.colorBlue {
+  @apply bg-blue-500;
+}
+.colorYellow {
+  @apply bg-yellow-400;
+}
+.colorRed {
+  @apply bg-red-400;
+}
+.colorGreen {
+    @apply bg-green-500;
+}
+
+/* --- Layout Styles (Tidak Berubah) --- */
+.mainContainer {
+  /* HAPUS 'min-h-screen' DARI SINI */
+  @apply p-4 md:p-8 font-sans;
+  background-color: #ffffff;
+  @apply max-w-7xl mx-auto; 
+}
+
+.header {
+  @apply text-center mb-2;
+}
+.mainTitle {
+  @apply text-4xl font-extrabold text-gray-900 mb-4;
+}
+.subTitle {
+  @apply text-xl text-gray-700;
+}
+
+/* --- Roadmap Styles (KEMBALI KE GRID) --- */
+.roadmapContainer {
+  /* Hapus overflow-x-auto, kita tidak mau scroll */
+  @apply pb-4;
+}
+
+.roadmapGrid {
+  /* Ini adalah layout grid yang kita sepakati */
+  @apply grid gap-4;
+  @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-4;
+  
+  /* Ini kuncinya, agar tidak ada 'gap' besar */
+  @apply items-start; 
+}
+
+/* --- Semester Styles (KEMBALI KE VERSI ASLI) --- */
+.semesterColumn {
+  @apply flex flex-col;
+  /* Hapus w-60 dan flex-shrink-0, biarkan grid yang atur */
+}
+
+.semesterHeader {
+  @apply bg-purple-600 text-white p-3 py-2 shadow-md text-center;
+  @apply rounded-lg;
+  @apply w-full; /* Buat header selebar kolom grid-nya */
+}
+.semesterTitle {
+  @apply text-lg font-bold;
+}
+.semesterSKS {
+  @apply text-sm;
+}
+
+.courseList {
+  /* Ini adalah layout tumpukan vertikal standar */
+  @apply space-y-2 pt-3;
+}
+
+/* --- Course Card Styles (KEMBALI KE VERSI ASLI) --- */
+.courseCard {
+  /* Mata kuliah dibuat 'w-full' agar rapi selebar kolom */
+  @apply w-full p-4 rounded-lg text-white text-sm shadow-md cursor-pointer transition-transform hover:scale-105;
+}
