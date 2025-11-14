@@ -5,7 +5,7 @@ export type MaterialType = 'PDF' | 'LINK' | 'TEXT' | 'IMAGE';
 export interface Material {
   id: number;
   title: string;
-  type: MaterialType;
+  type: string;
   content: string; 
   courseId: number;
 }
