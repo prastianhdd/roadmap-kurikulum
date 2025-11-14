@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import './globals.css'; 
 
 export const metadata = {
-  title: 'Computer Science', 
+  title: 'Roadmap Computer Science', 
   description: 'Peta kurikulum interaktif Ilmu Komputer',
 }
 

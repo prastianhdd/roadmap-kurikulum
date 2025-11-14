@@ -4,8 +4,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// HAPUS IMPORT 'getRoadmapData' DARI SINI
-// import { getRoadmapData } from '@/lib/data'; 
 import { Course, RoadmapData } from '@/lib/types';
 import styles from './page.module.css';
 
@@ -24,8 +22,6 @@ export default function Home() {
   useEffect(() => {
     async function loadData() {
       try {
-        // --- INI PERUBAHANNYA ---
-        // Panggil API Route internal Anda, BUKAN 'getRoadmapData'
         const response = await fetch('/api/roadmap');
         
         if (!response.ok) {
@@ -66,9 +62,8 @@ export default function Home() {
         {/* ... (sisa JSX Anda tidak berubah) ... */}
         <div className={styles.header}>
           <h1 className={styles.mainTitle}>
-            Penyusunan Mata Kuliah OBE 2025
+            2025 Computer Science Curriculum Map
           </h1>
-          <p className={styles.subTitle}>Total {totalSKS} SKS</p>
         </div>
 
         <div className={styles.roadmapContainer}>
