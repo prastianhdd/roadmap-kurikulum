@@ -6,14 +6,14 @@ export interface Material {
   id: number;
   title: string;
   type: MaterialType;
-  content: string; // URL atau teks
+  content: string; 
   courseId: number;
 }
 
 export interface Course {
   id: number;
   name: string;
-  category: string; // 'blue', 'yellow', 'red', 'gray'
+  category: string; 
   semesterId: number;
   materials: Material[];
 }
@@ -26,5 +26,5 @@ export interface Semester {
   courses: Course[];
 }
 
-// Tipe data lengkap untuk roadmap
+
 export type RoadmapData = Semester[];

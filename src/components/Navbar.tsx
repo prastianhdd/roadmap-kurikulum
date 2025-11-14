@@ -1,7 +1,7 @@
 // src/components/Navbar.tsx
 
 import Link from 'next/link';
-import { BookOpen } from 'lucide-react'; // Gunakan ikon yang relevan
+import { BookOpen } from 'lucide-react'; 
 
 export default function Navbar() {
   return (
@@ -12,11 +12,11 @@ export default function Navbar() {
           <Link href="/" className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
             <BookOpen size={24} />
             <span className="font-bold text-xl">
-              Kurikulum CS
+              Computer Science
             </span>
           </Link>
           
-          {/* Nav Links (Contoh) */}
+
           <div className="flex items-center space-x-4">
             <Link href="/" className="text-gray-600 hover:text-blue-600 font-medium">
               Roadmap

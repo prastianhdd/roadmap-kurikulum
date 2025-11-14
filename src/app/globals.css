@@ -3,10 +3,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Semua style kustom .course-card dan .bg-course-* TELAH DIPINDAHKAN ke src/app/page.module.css 
-*/
-
-/* Anda bisa biarkan file ini kosong di bawah 3 baris @tailwind
-  atau tambahkan style global (cth: untuk font) jika perlu.
-*/

@@ -2,17 +2,12 @@
 
 'use client';
 
-// HAPUS useState dan CourseModal
-// import { useState } from 'react';
-// import { Course, RoadmapData } from '@/lib/types';
-// import CourseModal from '@/components/CourseModal';
-
-import { useRouter } from 'next/navigation'; // <-- GANTI useState dengan useRouter
-import { getRoadmapData } from '@/lib/data';
-import { Course, RoadmapData } from '@/lib/types'; // <-- Tambahkan 'Course'
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+// HAPUS IMPORT 'getRoadmapData' DARI SINI
+// import { getRoadmapData } from '@/lib/data'; 
+import { Course, RoadmapData } from '@/lib/types';
 import styles from './page.module.css';
-
-const roadmapData: RoadmapData = getRoadmapData();
 
 const categoryColorMap: { [key: string]: string } = {
   blue: styles.colorBlue,
@@ -22,29 +17,53 @@ const categoryColorMap: { [key: string]: string } = {
 };
 
 export default function Home() {
-  // HAPUS state modal
-  // const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [roadmapData, setRoadmapData] = useState<RoadmapData>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
-  const router = useRouter(); // <-- Buat instance router
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // --- INI PERUBAHANNYA ---
+        // Panggil API Route internal Anda, BUKAN 'getRoadmapData'
+        const response = await fetch('/api/roadmap');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setRoadmapData(data);
+        // --- AKHIR PERUBAHAN ---
 
-  // HAPUS fungsi handle modal
-  // const handleCourseClick = (course: Course) => {
-  //   setSelectedCourse(course);
-  // };
-  // const handleCloseModal = () => {
-  //   setSelectedCourse(null);
-  // };
+      } catch (error) {
+        console.error("Gagal mengambil data roadmap:", error);
+        
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    loadData();
+  }, []);
 
-  // BUAT FUNGSI handleCourseClick BARU
   const handleCourseClick = (course: Course) => {
     router.push(`/course/${course.id}`);
   };
 
   const totalSKS = roadmapData.reduce((acc, semester) => acc + semester.sks, 0);
 
+  if (isLoading) {
+    return (
+      <main className={styles.mainContainer}>
+        <p className="text-center text-gray-500">Loading roadmap data...</p>
+      </main>
+    );
+  }
+
   return (
     <main className={styles.mainContainer}>
-        {/* ... (Header Anda tidak berubah) ... */}
+        {/* ... (sisa JSX Anda tidak berubah) ... */}
         <div className={styles.header}>
           <h1 className={styles.mainTitle}>
             Penyusunan Mata Kuliah OBE 2025
@@ -52,7 +71,6 @@ export default function Home() {
           <p className={styles.subTitle}>Total {totalSKS} SKS</p>
         </div>
 
-        {/* ... (Roadmap Container tidak berubah) ... */}
         <div className={styles.roadmapContainer}>
           <div className={styles.roadmapGrid}>
             {roadmapData.map((semester) => (
@@ -70,7 +88,6 @@ export default function Home() {
                       className={`${styles.courseCard} ${
                         categoryColorMap[course.category] || styles.colorGreen
                       }`}
-                      // UBAH onClick di sini
                       onClick={() => handleCourseClick(course)}
                     >
                       {course.name}
@@ -81,9 +98,6 @@ export default function Home() {
             ))}
           </div>
         </div>
-
-      {/* HAPUS CourseModal dari sini */}
-      {/* <CourseModal course={selectedCourse} onClose={handleCloseModal} /> */}
     </main>
   );
 }
