@@ -64,6 +64,7 @@ export default function Home() {
           <h1 className={styles.mainTitle}>
             2025 Computer Science Curriculum Map
           </h1>
+          <p className={styles.subTitle}>Total {totalSKS} SKS</p>
         </div>
 
         <div className={styles.roadmapContainer}>
