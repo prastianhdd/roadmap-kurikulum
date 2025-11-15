@@ -140,7 +140,7 @@ export default function UploadForm() {
   return (
     <form 
       onSubmit={handleSubmit} 
-      className="space-y-6 bg-white p-8 border border-slate-200 rounded-2xl shadow-lg"
+      className="space-y-6 bg-white p-8 border border-slate-400 rounded-2xl shadow-lg"
     >
       {message && (
         <p className={`p-4 rounded-lg ${message.includes('Gagal') ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>

@@ -4,26 +4,20 @@ import UploadForm from '@/components/UploadForm';
 
 export default function AdminPage() {
   return (
-    // 1. Latar belakang abu-abu/off-white untuk seluruh halaman admin
-    <div className="min-h-screen mx-auto bg-slate-50 py-8">
+    <div className="min-h-screen bg-slate-50 py-12">
       
-      {/* 2. Kontainer konsisten dengan layout utama Anda */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <div className="max-w-4xl mx-auto px-4">
         
-        {/* 3. Judul halaman diletakkan di luar kartu form */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-green-700">
+        <div className="mb-8 p-8 bg-gradient-to-r from-green-800 to-blue-800 rounded-2xl shadow-lg">
+          <h1 className="text-3xl font-bold text-white">
             Admin Dashboard
           </h1>
-          <p className="mt-1 text-lg text-red-600">
+          <p className="mt-1 text-lg text-slate-100">
             Upload dan kelola materi pembelajaran baru.
           </p>
         </div>
 
-        {/* 4. Form upload dibatasi lebarnya agar lebih rapi */}
-        <div className="max-w-4xl">
-          <UploadForm />
-        </div>
+        <UploadForm />
 
       </div>
     </div>
