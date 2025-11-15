@@ -8,12 +8,12 @@ import CourseMaterials from '@/components/CourseMaterials';
 
 // Pemetaan dari nama kategori ke kelas warna Tailwind
 const categoryColorMap: { [key: string]: string } = {
-  green: 'bg-green-500', //
-  blue: 'bg-blue-600', //
-  yellow: 'bg-yellow-500', //
-  red: 'bg-red-500', //
+  green: 'from-green-700 to-green-600', //
+  blue: 'from-blue-800 to-blue-700',
+  yellow: 'from-yellow-600 to-yellow-500', //
+  red: 'from-red-700 to-red-600', //
 };
-const defaultColor = 'bg-gray-600';
+const defaultColor = 'from-gray-800 to-gray-600';
 
 export default async function CourseDetailPage({ params }: { params: { id: string } }) {
   const courseId = parseInt(params.id, 10);
@@ -31,7 +31,7 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
       
       {/* === HERO BANNER (HANYA BANNER) === */}
       {/* Ini adalah bagian berwarna di atas */}
-      <div className={`${bannerColor} text-white p-8 shadow-md`}>
+      <div className={`bg-gradient-to-r ${bannerColor} text-white p-8 shadow-md`}>
         <div className="max-w-4xl mx-auto">
           <Link 
             href="/" 
@@ -50,7 +50,7 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
       {/* === KONTEN UTAMA (DI BAWAH BANNER) === */}
       {/* Ini adalah area konten putih yang rapi di bawah banner */}
       <div className="max-w-4xl mx-auto p-4 md:py-10 md:px-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
           Materi Pembelajaran
         </h2>
         
