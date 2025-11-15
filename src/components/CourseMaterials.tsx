@@ -3,22 +3,30 @@
 'use client'; 
 
 import { Material } from '@/lib/types';
-import Image from 'next/image'; // 1. Import Next.js Image
+import Image from 'next/image';
 
 // 2. Fungsi untuk mendapatkan path ikon PNG Anda
-//    Pastikan Anda sudah menaruh file di /public/icons/
 const getIconPath = (type: string): string => {
   switch (type) {
     case 'PDF': return '/icons/pdf.png';
     case 'LINK': return '/icons/link.png';
     case 'TEXT': return '/icons/text.png';
     case 'IMAGE': return '/icons/image.png';
+    case 'PPT': return '/icons/ppt.png';
+    case 'WORD': return '/icons/word.png'; 
+    case 'DRIVE': return '/icons/drive.png';
     default: return '/icons/unknown.png';
   }
 };
 
 // Cek apakah bisa diklik
-const isClickable = (type: string) => type === 'LINK' || type === 'PDF' || type === 'IMAGE';
+const isClickable = (type: string) => 
+  type === 'LINK' || 
+  type === 'PDF' || 
+  type === 'IMAGE' || 
+  type === 'PPT' || 
+  type === 'WORD' || 
+  type === 'DRIVE';  
 
 
 interface CourseMaterialsProps {
@@ -52,8 +60,8 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
                 <Image
                   src={getIconPath(material.type)}
                   alt={`${material.type} icon`}
-                  width={28} // Sesuaikan ukuran ikon di dalam frame
-                  height={28} // Sesuaikan ukuran ikon di dalam frame
+                  width={28} 
+                  height={28}
                   className="object-contain"
                 />
               </div>
@@ -62,7 +70,7 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
               <div className="flex-grow">
                 <p className="text-lg font-semibold text-gray-800">{material.title}</p>
                 
-                {/* Teks deskripsi/bantuan */}
+                {/* --- DESKRIPSI DIPERBARUI --- */}
                 {material.type === 'TEXT' && (
                   <p className="text-sm text-gray-600 mt-1 italic">
                     &ldquo;{material.content}&rdquo;
@@ -83,6 +91,23 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
                     Link eksternal. Klik untuk membuka di tab baru.
                   </p>
                 )}
+                {/* Tambahan Baru */}
+                {material.type === 'PPT' && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    File presentasi. Klik untuk membuka di tab baru.
+                  </p>
+                )}
+                {material.type === 'WORD' && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    File dokumen. Klik untuk membuka di tab baru.
+                  </p>
+                )}
+                {material.type === 'DRIVE' && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    Link Google Drive. Klik untuk membuka di tab baru.
+                  </p>
+                )}
+                {/* --- AKHIR DESKRIPSI --- */}
               </div>
             </a>
           );

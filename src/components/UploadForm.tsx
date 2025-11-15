@@ -6,6 +6,38 @@ import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 // Impor tipe data Anda
 import { RoadmapData, Course, MaterialType } from '@/lib/types'; 
 
+// --- FUNGSI HELPER BARU ---
+const getFileUploadLabel = (type: MaterialType): string => {
+  switch (type) {
+    case 'PDF': return 'Upload File PDF';
+    case 'IMAGE': return 'Upload File Gambar';
+    case 'PPT': return 'Upload File Presentasi (PPT)';
+    case 'WORD': return 'Upload File Dokumen (Word)';
+    default: return 'Upload File';
+  }
+};
+
+const getAcceptableFileTypes = (type: MaterialType): string => {
+  switch (type) {
+    case 'PDF': return '.pdf';
+    case 'IMAGE': return 'image/*';
+    case 'PPT': return '.ppt, .pptx';
+    case 'WORD': return '.doc, .docx';
+    default: return '';
+  }
+};
+
+const getTextContentLabel = (type: MaterialType): string => {
+  switch (type) {
+    case 'LINK': return 'URL Tautan';
+    case 'DRIVE': return 'URL Google Drive';
+    case 'TEXT': return 'Isi Teks';
+    default: return 'Konten';
+  }
+};
+// --- AKHIR FUNGSI HELPER ---
+
+
 export default function UploadForm() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [courseId, setCourseId] = useState<string>('');
@@ -49,17 +81,22 @@ export default function UploadForm() {
     formData.append('type', type);
     formData.append('courseId', courseId);
 
-    if (type === 'PDF' || type === 'IMAGE') {
+    // --- LOGIKA DIPERBARUI ---
+    // Jika tipe adalah file
+    if (type === 'PDF' || type === 'IMAGE' || type === 'PPT' || type === 'WORD') {
       if (file) {
         formData.append('file', file);
       } else {
-        setMessage('Tolong pilih file untuk tipe PDF/IMAGE');
+        setMessage(`Tolong pilih file untuk tipe ${type}`);
         setIsLoading(false);
         return;
       }
-    } else {
+    } 
+    // Jika tipe adalah link atau teks
+    else { 
       formData.append('content', textContent);
     }
+    // --- AKHIR LOGIKA ---
 
     try {
       const response = await fetch('/api/materials', {
@@ -77,7 +114,6 @@ export default function UploadForm() {
       setTextContent('');
       setFile(null);
       
-      // Mengosongkan input file secara manual
       const fileInput = document.getElementById('file') as HTMLInputElement;
       if (fileInput) {
         fileInput.value = '';
@@ -91,10 +127,8 @@ export default function UploadForm() {
     }
   };
 
-  // --- STYLING YANG DIPERBARUI ---
   const inputStyle = "w-full p-3 border border-slate-300 rounded-lg shadow-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors duration-200";
   const labelStyle = "block text-sm font-semibold text-gray-700 mb-1.5";
-  // --- AKHIR STYLING ---
 
 
   if (isLoading && courses.length === 0) {
@@ -106,7 +140,6 @@ export default function UploadForm() {
   }
 
   return (
-    // Kartu form dengan style profesional
     <form 
       onSubmit={handleSubmit} 
       className="space-y-6 bg-white p-8 border border-slate-200 rounded-2xl shadow-lg"
@@ -163,17 +196,23 @@ export default function UploadForm() {
           className={inputStyle}
           disabled={isLoading}
         >
+          {/* --- OPSI DIPERBARUI --- */}
           <option value="LINK">LINK (Tautan Eksternal)</option>
+          <option value="DRIVE">DRIVE (Link Google Drive)</option>
           <option value="TEXT">TEXT (Teks Singkat)</option>
           <option value="PDF">PDF (File)</option>
           <option value="IMAGE">IMAGE (File)</option>
+          <option value="PPT">PPT (File Presentasi)</option>
+          <option value="WORD">WORD (File Dokumen)</option>
+          {/* --- AKHIR OPSI --- */}
         </select>
       </div>
 
-      {(type === 'LINK' || type === 'TEXT') ? (
+      {/* --- LOGIKA DIPERBARUI --- */}
+      {(type === 'LINK' || type === 'TEXT' || type === 'DRIVE') ? (
         <div>
           <label htmlFor="textContent" className={labelStyle}>
-            {type === 'LINK' ? 'URL Tautan' : 'Isi Teks'}
+            {getTextContentLabel(type)}
           </label>
           <textarea
             id="textContent"
@@ -181,7 +220,7 @@ export default function UploadForm() {
             value={textContent}
             onChange={(e) => setTextContent(e.target.value)}
             className={inputStyle}
-            placeholder={type === 'LINK' ? 'https://...' : 'Tulis teks singkat di sini...'}
+            placeholder={type === 'LINK' || type === 'DRIVE' ? 'https://...' : 'Tulis teks singkat di sini...'}
             disabled={isLoading}
             required
           />
@@ -189,19 +228,20 @@ export default function UploadForm() {
       ) : (
         <div>
           <label htmlFor="file" className={labelStyle}>
-            {type === 'PDF' ? 'Upload File PDF' : 'Upload File Gambar'}
+            {getFileUploadLabel(type)}
           </label>
           <input
             type="file"
             id="file"
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFile(e.target.files ? e.target.files[0] : null)}
             className={`${inputStyle} file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer`}
-            accept={type === 'PDF' ? '.pdf' : 'image/*'}
+            accept={getAcceptableFileTypes(type)}
             disabled={isLoading}
             required
           />
         </div>
       )}
+      {/* --- AKHIR LOGIKA --- */}
 
       <div className="pt-2 text-right">
         <button
