@@ -11,7 +11,6 @@ const getFileUploadLabel = (type: MaterialType): string => {
   switch (type) {
     case 'PDF': return 'Upload File PDF';
     case 'IMAGE': return 'Upload File Gambar';
-    case 'PPT': return 'Upload File Presentasi (PPT)';
     case 'WORD': return 'Upload File Dokumen (Word)';
     default: return 'Upload File';
   }
@@ -21,7 +20,6 @@ const getAcceptableFileTypes = (type: MaterialType): string => {
   switch (type) {
     case 'PDF': return '.pdf';
     case 'IMAGE': return 'image/*';
-    case 'PPT': return '.ppt, .pptx';
     case 'WORD': return '.doc, .docx';
     default: return '';
   }
@@ -83,7 +81,7 @@ export default function UploadForm() {
 
     // --- LOGIKA DIPERBARUI ---
     // Jika tipe adalah file
-    if (type === 'PDF' || type === 'IMAGE' || type === 'PPT' || type === 'WORD') {
+    if (type === 'PDF' || type === 'IMAGE' || type === 'WORD') {
       if (file) {
         formData.append('file', file);
       } else {
@@ -202,7 +200,6 @@ export default function UploadForm() {
           <option value="TEXT">TEXT (Teks Singkat)</option>
           <option value="PDF">PDF (File)</option>
           <option value="IMAGE">IMAGE (File)</option>
-          <option value="PPT">PPT (File Presentasi)</option>
           <option value="WORD">WORD (File Dokumen)</option>
           {/* --- AKHIR OPSI --- */}
         </select>

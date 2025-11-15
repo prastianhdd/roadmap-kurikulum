@@ -1,6 +1,6 @@
 // Mendefinisikan tipe data sesuai skema Prisma kita
 
-export type MaterialType = 'LINK' | 'TEXT' | 'PDF' | 'IMAGE' | 'PPT' | 'WORD' | 'DRIVE';
+export type MaterialType = 'LINK' | 'TEXT' | 'PDF' | 'IMAGE' | 'WORD' | 'DRIVE';
 
 export interface Material {
   id: number;

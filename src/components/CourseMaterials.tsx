@@ -12,7 +12,6 @@ const getIconPath = (type: string): string => {
     case 'LINK': return '/icons/link.png';
     case 'TEXT': return '/icons/text.png';
     case 'IMAGE': return '/icons/image.png';
-    case 'PPT': return '/icons/ppt.png';
     case 'WORD': return '/icons/word.png'; 
     case 'DRIVE': return '/icons/drive.png';
     default: return '/icons/unknown.png';
@@ -24,7 +23,6 @@ const isClickable = (type: string) =>
   type === 'LINK' || 
   type === 'PDF' || 
   type === 'IMAGE' || 
-  type === 'PPT' || 
   type === 'WORD' || 
   type === 'DRIVE';  
 
@@ -89,12 +87,6 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
                 {material.type === 'LINK' && (
                   <p className="text-sm text-gray-600 mt-1">
                     Link eksternal. Klik untuk membuka di tab baru.
-                  </p>
-                )}
-                {/* Tambahan Baru */}
-                {material.type === 'PPT' && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    File presentasi. Klik untuk membuka di tab baru.
                   </p>
                 )}
                 {material.type === 'WORD' && (
