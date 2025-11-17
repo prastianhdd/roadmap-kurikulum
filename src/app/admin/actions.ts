@@ -2,11 +2,15 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createServerClient } from '@supabase/ssr' // Gunakan server helper
+// --- PERUBAHAN DI SINI ---
+import { createServerClient } from '@supabase/ssr' // Ini untuk cek sesi user
+import { createClient } from '@supabase/supabase-js' // Ini untuk admin storage
+// --- AKHIR PERUBAHAN ---
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma'
 
-// Helper untuk membuat Supabase Server Client di dalam Server Action
+// Helper untuk membuat Supabase Server Client (untuk cek user)
+// Ini TIDAK BERUBAH
 function createSupabaseServerClient() {
   const cookieStore = cookies()
   return createServerClient(
@@ -22,16 +26,19 @@ function createSupabaseServerClient() {
   )
 }
 
+// --- PERBAIKAN DI SINI ---
 // Helper untuk membuat Supabase Admin Client (untuk menghapus storage)
-// Kita butuh Service Key di sini
-const supabaseAdmin = createServerClient(
+// Kita gunakan createClient biasa dengan SERVICE_KEY
+const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY! // SERVICE KEY
 );
+// --- AKHIR PERBAIKAN ---
 
 
 export async function deleteMaterial(materialId: number) {
-  const supabase = createSupabaseServerClient()
+  // Ini menggunakan helper yang benar untuk cek sesi
+  const supabase = createSupabaseServerClient() 
 
   // 1. Cek Autentikasi
   const { data: { user } } = await supabase.auth.getUser()
@@ -51,6 +58,7 @@ export async function deleteMaterial(materialId: number) {
 
     // 3. Jika ada file di storage, hapus file itu
     if (material.storagePath) {
+      // Ini sekarang akan menggunakan supabaseAdmin yang sudah benar
       const { error: storageError } = await supabaseAdmin.storage
         .from('materials') // Sesuaikan nama bucket
         .remove([material.storagePath])

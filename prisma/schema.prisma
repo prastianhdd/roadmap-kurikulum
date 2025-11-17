@@ -31,13 +31,17 @@ model Course {
 
 // Model untuk Materi Pembelajaran
 model Material {
-  id       Int      @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   title    String
-  // Tipe materi: 'PDF', 'LINK', 'TEXT', 'IMAGE'
+  // Tipe materi: 'PDF', 'LINK', 'TEXT', 'IMAGE', 'WORD', 'DRIVE'
   type     String
   // URL untuk PDF/LINK/IMAGE, atau konten langsung untuk TEXT
   content  String
-  storagePath String?
-  course   Course   @relation(fields: [courseId], references: [id])
+  
+  // === TAMBAHKAN KOLOM INI ===
+  storagePath String?  // Menyimpan path file di Supabase Storage, opsional
+  // ==========================
+
+  course   Course @relation(fields: [courseId], references: [id])
   courseId Int
 }

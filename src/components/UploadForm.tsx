@@ -2,31 +2,28 @@
 
 'use client';
 
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-// Impor tipe data Anda
-import { RoadmapData, Course, MaterialType } from '@/lib/types'; 
+// HAPUS 'useEffect'
+import { useState, ChangeEvent, FormEvent } from 'react';
+// HAPUS 'RoadmapData' dan 'Course'
+import { MaterialType } from '@/lib/types'; 
 
-// --- FUNGSI HELPER BARU ---
+// ... (Fungsi helper tidak berubah) ...
 const getFileUploadLabel = (type: MaterialType): string => {
   switch (type) {
     case 'PDF': return 'Upload File PDF';
     case 'IMAGE': return 'Upload File Gambar';
-    case 'PPT': return 'Upload File Presentasi (PPT)';
     case 'WORD': return 'Upload File Dokumen (Word)';
     default: return 'Upload File';
   }
 };
-
 const getAcceptableFileTypes = (type: MaterialType): string => {
   switch (type) {
     case 'PDF': return '.pdf';
     case 'IMAGE': return 'image/*';
-    case 'PPT': return '.ppt, .pptx';
     case 'WORD': return '.doc, .docx';
     default: return '';
   }
 };
-
 const getTextContentLabel = (type: MaterialType): string => {
   switch (type) {
     case 'LINK': return 'URL Tautan';
@@ -38,38 +35,31 @@ const getTextContentLabel = (type: MaterialType): string => {
 // --- AKHIR FUNGSI HELPER ---
 
 
-export default function UploadForm() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [courseId, setCourseId] = useState<string>('');
+// --- PERUBAHAN DI SINI ---
+// 1. Definisikan props baru dengan tipe yang lebih sederhana
+interface UploadFormProps {
+  courses: {
+    id: number;
+    name: string;
+  }[];
+}
+// --- AKHIR PERUBAHAN ---
+
+// 2. Terima 'courses' sebagai prop
+export default function UploadForm({ courses }: UploadFormProps) {
+  // HAPUS: state 'courses'
+  
+  // 3. Set state awal courseId dari props (kode ini sudah benar)
+  const [courseId, setCourseId] = useState<string>(courses.length > 0 ? courses[0].id.toString() : '');
   const [title, setTitle] = useState<string>('');
   const [type, setType] = useState<MaterialType>('LINK');
   const [textContent, setTextContent] = useState<string>(''); 
   const [file, setFile] = useState<File | null>(null); 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 4. Set loading awal ke false
   const [message, setMessage] = useState<string>('');
 
-  useEffect(() => {
-    async function loadCourses() {
-      try {
-        const response = await fetch('/api/roadmap');
-        if (!response.ok) throw new Error('Gagal mengambil data roadmap');
-        
-        const data: RoadmapData = await response.json();
-        const allCourses = data.flatMap(semester => semester.courses);
-        setCourses(allCourses);
-        
-        if (allCourses.length > 0) {
-          setCourseId(allCourses[0].id.toString());
-        }
-      } catch (error) {
-        console.error("Gagal memuat data roadmap:", error);
-        setMessage("Gagal memuat mata kuliah");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadCourses();
-  }, []);
+  // 5. HAPUS seluruh blok 'useEffect' untuk loadCourses
+  // useEffect(() => { ... }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,9 +71,9 @@ export default function UploadForm() {
     formData.append('type', type);
     formData.append('courseId', courseId);
 
-    // --- LOGIKA DIPERBARUI ---
-    // Jika tipe adalah file
-    if (type === 'PDF' || type === 'IMAGE' || type === 'PPT' || type === 'WORD') {
+    const isFileBased = type === 'PDF' || type === 'IMAGE' || type === 'WORD';
+
+    if (isFileBased) {
       if (file) {
         formData.append('file', file);
       } else {
@@ -92,11 +82,9 @@ export default function UploadForm() {
         return;
       }
     } 
-    // Jika tipe adalah link atau teks
     else { 
       formData.append('content', textContent);
     }
-    // --- AKHIR LOGIKA ---
 
     try {
       const response = await fetch('/api/materials', {
@@ -119,6 +107,10 @@ export default function UploadForm() {
         fileInput.value = '';
       }
 
+      // 6. Refresh halaman untuk memuat ulang daftar di MaterialList
+      //    Ini akan mengambil data baru dari server
+      window.location.reload(); 
+
     } catch (error) {
       console.error(error);
       setMessage(error instanceof Error ? error.message : 'Terjadi kesalahan');
@@ -131,13 +123,8 @@ export default function UploadForm() {
   const labelStyle = "block text-sm font-semibold text-gray-700 mb-1.5";
 
 
-  if (isLoading && courses.length === 0) {
-    return (
-      <div className="bg-white p-8 border border-slate-200 rounded-2xl shadow-lg">
-        <p className="text-gray-600">Loading data mata kuliah...</p>
-      </div>
-    );
-  }
+  // 7. HAPUS blok 'if (isLoading && courses.length === 0)'
+  // if (isLoading && courses.length === 0) { ... }
 
   return (
     <form 
@@ -161,6 +148,7 @@ export default function UploadForm() {
           className={inputStyle}
           disabled={isLoading}
         >
+          {/* 8. Ini akan tetap berfungsi dengan tipe baru */}
           {courses.map((course) => (
             <option key={course.id} value={course.id}>
               {course.name}
@@ -196,19 +184,15 @@ export default function UploadForm() {
           className={inputStyle}
           disabled={isLoading}
         >
-          {/* --- OPSI DIPERBARUI --- */}
           <option value="LINK">LINK (Tautan Eksternal)</option>
           <option value="DRIVE">DRIVE (Link Google Drive)</option>
           <option value="TEXT">TEXT (Teks Singkat)</option>
           <option value="PDF">PDF (File)</option>
           <option value="IMAGE">IMAGE (File)</option>
-          <option value="PPT">PPT (File Presentasi)</option>
           <option value="WORD">WORD (File Dokumen)</option>
-          {/* --- AKHIR OPSI --- */}
         </select>
       </div>
 
-      {/* --- LOGIKA DIPERBARUI --- */}
       {(type === 'LINK' || type === 'TEXT' || type === 'DRIVE') ? (
         <div>
           <label htmlFor="textContent" className={labelStyle}>
@@ -241,7 +225,6 @@ export default function UploadForm() {
           />
         </div>
       )}
-      {/* --- AKHIR LOGIKA --- */}
 
       <div className="pt-2 text-right">
         <button

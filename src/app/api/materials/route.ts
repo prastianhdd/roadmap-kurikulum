@@ -1,10 +1,8 @@
 // src/app/api/materials/route.ts
-
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import prisma from '@/lib/prisma'; // Menggunakan koneksi Prisma Anda
+import prisma from '@/lib/prisma';
 
-// Inisialisasi Supabase client dengan Service Key (untuk sisi server)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
@@ -14,54 +12,46 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
 
-    // Ambil data teks dari form
     const title = formData.get('title') as string;
     const type = formData.get('type') as string;
     const courseId = parseInt(formData.get('courseId') as string, 10);
     const file = formData.get('file') as File | null;
     
     let content = formData.get('content') as string;
-    let storagePath: string | null = null; // 1. Variabel untuk menyimpan path file
+    let storagePath: string | null = null; // Variabel untuk path
 
-    // 2. Logika diperbarui untuk mencakup 'WORD'
+    // Cek semua tipe file
     const isFileBased = type === 'PDF' || type === 'IMAGE' || type === 'WORD';
 
     if (isFileBased && file) {
-      
-      const bucketName = 'materials'; // Pastikan nama bucket Anda 'materials'
+      const bucketName = 'materials'; 
       const filePath = `uploads/${courseId}/${Date.now()}-${file.name}`;
 
-      // Upload file ke Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file);
 
-      if (uploadError) {
-        console.error('Supabase Upload Error:', uploadError);
-        throw new Error(`Gagal upload file: ${uploadError.message}`);
-      }
+      if (uploadError) throw new Error(`Gagal upload file: ${uploadError.message}`);
 
-      // Dapatkan URL publik file
       const { data } = supabase.storage
         .from(bucketName)
         .getPublicUrl(filePath);
 
       content = data.publicUrl;
-      storagePath = filePath; // 3. Simpan path file-nya
+      storagePath = filePath; // Simpan path-nya
       
     } else if (isFileBased && !file) {
-      // Jika tipe file tapi tidak ada file
       return NextResponse.json({ message: `File dibutuhkan untuk tipe ${type}` }, { status: 400 });
     }
 
-    // 4. Simpan metadata (termasuk storagePath) ke Database
+    // Simpan ke database
     const newMaterial = await prisma.material.create({
       data: {
         title: title,
         type: type,
         content: content, 
         courseId: courseId,
-        storagePath: storagePath, // 5. Simpan path-nya ke DB
+        storagePath: storagePath, // Simpan path ke DB
       },
     });
 

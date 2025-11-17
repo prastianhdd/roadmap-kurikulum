@@ -4,9 +4,11 @@ import UploadForm from '@/components/UploadForm';
 import LogoutButton from '@/components/LogoutButton';
 import MaterialList from '@/components/MaterialList'; 
 import prisma from '@/lib/prisma';
-import { Course } from '@/lib/types'; 
 import { redirect } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
+
+// HAPUS import 'Course' dari lib/types
+// import { Course } from '@/lib/types'; 
 
 export default async function AdminPage() {
   const supabase = createSupabaseServer();
@@ -27,18 +29,22 @@ export default async function AdminPage() {
     }
   });
 
-  const courses: Course[] = await prisma.course.findMany({
+  // --- PERUBAHAN DI SINI ---
+  // Kita tidak perlu tipe 'Course[]' lagi.
+  // Kita hanya mengambil 'id' dan 'name' untuk dropdown.
+  const courses = await prisma.course.findMany({
+    select: { // Gunakan 'select' untuk optimasi
+      id: true,
+      name: true
+    },
     orderBy: {
       semesterId: 'asc'
     }
   });
+  // --- AKHIR PERUBAHAN ---
 
   return (
-    // 1. Latar belakang abu-abu muda
     <div className="min-h-screen bg-slate-50">
-      
-      {/* 2. KONTENER UTAMA (Kolom Tengah) */}
-      {/* Semua elemen sekarang dibatasi oleh 'max-w-4xl' agar lebarnya sama */}
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
 
         {/* Kartu 1: Banner Header */}
@@ -51,10 +57,10 @@ export default async function AdminPage() {
               Upload dan kelola materi pembelajaran baru.
             </p>
           </div>
-          {/* Tombol Logout DIHAPUS dari sini */}
         </div>
 
         {/* Kartu 2: Form Upload */}
+        {/* 'courses' yang kita kirim sekarang adalah { id, name }[] */}
         <UploadForm courses={courses} />
         
         {/* Kartu 3: Daftar Materi */}
