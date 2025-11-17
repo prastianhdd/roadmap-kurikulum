@@ -1,10 +1,9 @@
 // src/app/tentang/page.tsx
 
-import { Github } from 'lucide-react'; // Menggunakan ikon dari Lucide
+import { Github } from 'lucide-react'; 
 
 export default function TentangPage() {
   return (
-    // Latar belakang abu-abu muda untuk seluruh halaman
     <div className="bg-white  min-h-screen">
       
       {/* === HERO BANNER (Biru, konsisten dengan Navbar) === */}
@@ -47,7 +46,7 @@ export default function TentangPage() {
           
           {/* === KARTU PROFIL GITHUB ANDA === */}
           <a
-            href="https://github.com/prastianhdd" // Link ke GitHub Anda
+            href="https://github.com/prastianhdd" 
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center p-4 bg-blue-100 rounded-lg border border-blue-300 shadow-sm transition-all duration-200 hover:shadow-md hover:border-blue-300 cursor-pointer"

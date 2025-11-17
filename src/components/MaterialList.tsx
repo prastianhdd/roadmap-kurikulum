@@ -2,34 +2,30 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Material } from '@prisma/client' 
+import { Material } from '@prisma/client'
 import { deleteMaterial } from '@/app/admin/actions'
-// 1. Import Ikon Edit dan Link
-import { Trash2, Loader2, Image as ImageIcon, Link as LinkIcon, Type, FileText, FilePen } from 'lucide-react'
-import Link from 'next/link';
+import { Trash2, Loader2, Image as ImageIcon, Link as LinkIcon, Type, FileText, FilePenLine, FileUp } from 'lucide-react'
+import Link from 'next/link'
 
-// ... (Tipe MaterialWithCourse tetap sama) ...
 type MaterialWithCourse = Material & {
   course: { name: string }
 }
+
 interface MaterialListProps {
   materials: MaterialWithCourse[]
 }
 
-// ... (Komponen TypeIcon tetap sama) ...
 const TypeIcon = ({ type }: { type: string }) => {
-  // Tambahkan case untuk tipe baru Anda
   if (type === 'PDF') return <FileText className="w-4 h-4 text-red-600" />
   if (type === 'IMAGE') return <ImageIcon className="w-4 h-4 text-purple-600" />
   if (type === 'LINK') return <LinkIcon className="w-4 h-4 text-blue-600" />
   if (type === 'TEXT') return <Type className="w-4 h-4 text-gray-600" />
   if (type === 'WORD') return <FileText className="w-4 h-4 text-blue-700" />
-  if (type === 'DRIVE') return <ImageIcon className="w-4 h-4 text-yellow-500" /> // Ganti ikon jika mau
+  if (type === 'DRIVE') return <FileUp className="w-4 h-4 text-yellow-500" />
   return null
 }
 
 export default function MaterialList({ materials }: MaterialListProps) {
-  // 'isPending' sekarang akan menangani loading untuk 'delete'
   const [isDeleting, startDeleteTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   
@@ -41,7 +37,6 @@ export default function MaterialList({ materials }: MaterialListProps) {
         if (!result.success) {
           setError(result.message)
         }
-        // Tidak perlu reload, revalidatePath akan menangani
       })
     }
   }
@@ -52,7 +47,6 @@ export default function MaterialList({ materials }: MaterialListProps) {
         Daftar Materi Ter-upload
       </h2>
 
-      {/* ... (Error handling tetap sama) ... */}
       {error && (
         <p className="p-4 rounded-md bg-red-100 text-red-800 mb-4">
           Error: {error}
@@ -72,7 +66,8 @@ export default function MaterialList({ materials }: MaterialListProps) {
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Mata Kuliah</th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tipe</th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0 text-right">
-                      Actions
+                      <span className="sr-only">Actions</span>
+                      <span className="text-sm font-semibold text-gray-900">Actions</span>
                     </th>
                   </tr>
                 </thead>
@@ -89,19 +84,16 @@ export default function MaterialList({ materials }: MaterialListProps) {
                           {material.type}
                         </span>
                       </td>
-                      {/* --- PERUBAHAN DI SINI --- */}
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <div className="flex gap-4 justify-end">
-                          {/* 2. Tambahkan Link Edit */}
                           <Link 
                             href={`/admin/edit/${material.id}`} 
                             className="text-blue-600 hover:text-blue-900"
                             title="Edit"
                           >
-                            <FilePen className="w-4 h-4" />
+                            <FilePenLine className="w-4 h-4" />
                           </Link>
                           
-                          {/* 3. Tombol Hapus */}
                           <button
                             onClick={() => handleDelete(material.id)}
                             disabled={isDeleting}
@@ -116,7 +108,6 @@ export default function MaterialList({ materials }: MaterialListProps) {
                           </button>
                         </div>
                       </td>
-                      {/* --- AKHIR PERUBAHAN --- */}
                     </tr>
                   ))}
                 </tbody>

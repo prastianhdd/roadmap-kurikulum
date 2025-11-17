@@ -5,7 +5,6 @@
 import { Material } from '@/lib/types';
 import Image from 'next/image';
 
-// 2. Fungsi untuk mendapatkan path ikon PNG Anda
 const getIconPath = (type: string): string => {
   switch (type) {
     case 'PDF': return '/icons/pdf.png';
@@ -18,7 +17,6 @@ const getIconPath = (type: string): string => {
   }
 };
 
-// Cek apakah bisa diklik
 const isClickable = (type: string) => 
   type === 'LINK' || 
   type === 'PDF' || 
@@ -105,7 +103,6 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
           );
         })
       ) : (
-        // Tampilan jika tidak ada materi
         <div className="p-6 bg-white rounded-lg border border-dashed border-gray-300">
           <p className="text-gray-500 italic text-center">
             Belum ada materi untuk mata kuliah ini.

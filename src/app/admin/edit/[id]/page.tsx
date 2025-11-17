@@ -1,13 +1,10 @@
 // src/app/admin/edit/[id]/page.tsx
 
-// HAPUS: import MaterialForm dari '@/components/UploadForm';
-import MaterialForm from '@/components/MaterialForm'; // Pastikan ini juga di-rename
+import MaterialForm from '@/components/MaterialForm';
 import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
-// --- PERBAIKAN DI SINI ---
-import { updateMaterial } from '../../actions'; // Ganti dari '../actions'
-// --- AKHIR PERBAIKAN ---
+import { updateMaterial } from '../../actions'; 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
@@ -46,7 +43,7 @@ export default async function EditMaterialPage({ params }: { params: { id: strin
     );
   }
 
-  // Bind 'materialId' ke server action 'updateMaterial'
+
   const updateMaterialWithId = updateMaterial.bind(null, material.id);
 
   return (
@@ -56,7 +53,7 @@ export default async function EditMaterialPage({ params }: { params: { id: strin
         {/* Navigasi Kembali */}
         <Link 
           href="/admin" 
-          className="flex items-center text-blue-600 hover:text-blue-800 group"
+          className="flex items-center text-blue-600 hover:text-blue-800 group font-semibold"
         >
           <ArrowLeft size={18} className="mr-2 transition-transform group-hover:-translate-x-1" />
           Kembali ke Dashboard
@@ -65,8 +62,8 @@ export default async function EditMaterialPage({ params }: { params: { id: strin
         {/* Kartu Form Edit */}
         <MaterialForm
           courses={courses}
-          action={updateMaterialWithId} // Berikan action yang sudah di-bind
-          initialData={material}        // Berikan data awal untuk mengisi form
+          action={updateMaterialWithId} 
+          initialData={material}        
           buttonText="Update Materi"
         />
         

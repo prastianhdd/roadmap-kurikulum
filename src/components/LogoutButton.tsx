@@ -12,7 +12,6 @@ export default function LogoutButton() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
-    // Tambahkan konfirmasi sebelum logout
     if (window.confirm('Apakah Anda yakin ingin logout?')) {
       setIsLoading(true);
       await supabase.auth.signOut()
@@ -22,8 +21,7 @@ export default function LogoutButton() {
   }
 
   return (
-    // 1. Ini adalah CARD-nya (putih, shadow, rounded)
-    //    Lebarnya akan otomatis mengikuti 'max-w-4xl' dari parent
+
     <div className="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
       
       {/* 2. Div ini untuk men-tengahkan tombol */}
@@ -31,7 +29,6 @@ export default function LogoutButton() {
         <button
           onClick={handleLogout}
           disabled={isLoading}
-          // 3. Style tombol baru (merah, besar)
           className="flex items-center justify-center gap-2 py-3 px-8 rounded-lg text-sm font-semibold 
                      bg-red-600 text-white 
                      hover:bg-red-700 transition-colors

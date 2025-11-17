@@ -7,22 +7,26 @@ import { Material } from '@prisma/client';
 import { MaterialType } from '@/lib/types';
 import { AlertCircle } from 'lucide-react';
 
-// --- Tipe Data (Helper) ---
+
 type CourseDropdownItem = {
   id: number;
   name: string;
 };
 
+
+type FormState = {
+  success: boolean;
+  message: string;
+};
+
 interface MaterialFormProps {
   courses: CourseDropdownItem[];
-  // 'action' adalah Server Action yang akan kita buat
-  action: (prevState: any, formData: FormData) => Promise<{ success: boolean; message: string; }>;
-  // 'initialData' opsional, hanya untuk mode edit
+  action: (prevState: FormState, formData: FormData) => Promise<FormState>;
   initialData?: Material | null;
   buttonText: string;
 }
 
-// --- Fungsi Helper (dari file Anda) ---
+
 const getFileUploadLabel = (type: MaterialType): string => {
   switch (type) {
     case 'PDF': return 'Upload File PDF';
@@ -31,7 +35,6 @@ const getFileUploadLabel = (type: MaterialType): string => {
     default: return 'Upload File';
   }
 };
-// ... (sisa helper Anda: getAcceptableFileTypes, getTextContentLabel) ...
 const getAcceptableFileTypes = (type: MaterialType): string => {
   switch (type) {
     case 'PDF': return '.pdf';
@@ -48,9 +51,7 @@ const getTextContentLabel = (type: MaterialType): string => {
     default: return 'Konten';
   }
 };
-// --- AKHIR FUNGSI HELPER ---
 
-// Komponen Tombol Submit terpisah untuk menggunakan 'useFormStatus'
 function SubmitButton({ text }: { text: string }) {
   const { pending } = useFormStatus();
   return (
@@ -65,24 +66,17 @@ function SubmitButton({ text }: { text: string }) {
 }
 
 export default function MaterialForm({ courses, action, initialData, buttonText }: MaterialFormProps) {
-  // useFormState untuk menangani feedback dari server action
-  const [state, formAction] = useFormState(action, { success: false, message: '' });
-
-  // State lokal untuk mengontrol UI form
+  const initialState: FormState = { success: false, message: '' };
+  const [state, formAction] = useFormState(action, initialState);
   const [type, setType] = useState<MaterialType>(initialData?.type as MaterialType || 'LINK');
-  
-  // State untuk mereset input file setelah submit sukses
-  const [fileKey, setFileKey] = useState(Date.now());
-
+  const [fileKey, setFileKey] = useState(Date.now()); 
   useEffect(() => {
-    if (state.success) {
-      // Jika sukses (create/update), reset form
-      // (Kita tidak perlu reload halaman lagi!)
+    if (state.success && !initialData) { 
       (document.getElementById('material-form') as HTMLFormElement)?.reset();
       setType('LINK');
-      setFileKey(Date.now()); // Reset input file
+      setFileKey(Date.now()); 
     }
-  }, [state]);
+  }, [state, initialData]);
 
   const inputStyle = "w-full p-3 border border-slate-300 rounded-lg shadow-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors duration-200";
   const labelStyle = "block text-sm font-semibold text-gray-700 mb-1.5";
@@ -91,10 +85,9 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
   return (
     <form 
       id="material-form"
-      action={formAction} // Panggil formAction
+      action={formAction}
       className="space-y-6 bg-white p-8 border border-slate-200 rounded-2xl shadow-lg"
     >
-      {/* Tampilkan pesan sukses atau error dari Server Action */}
       {state.message && (
         <div className={`p-4 rounded-lg flex gap-3 ${
             state.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -109,7 +102,7 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
         <label htmlFor="course" className={labelStyle}>Mata Kuliah</label>
         <select
           id="course"
-          name="courseId" // 'name' penting untuk FormData
+          name="courseId"
           defaultValue={initialData?.courseId.toString()}
           className={inputStyle}
           required
@@ -128,7 +121,7 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
         <input
           type="text"
           id="title"
-          name="title" // 'name' penting untuk FormData
+          name="title"
           defaultValue={initialData?.title}
           className={inputStyle}
           placeholder='Pertemuan 1 - Dasar Pemrograman'
@@ -141,8 +134,8 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
         <label htmlFor="type" className={labelStyle}>Tipe File Materi</label>
         <select
           id="type"
-          name="type" // 'name' penting untuk FormData
-          value={type} // Kontrol 'value' dengan state
+          name="type"
+          value={type} 
           onChange={(e) => setType(e.target.value as MaterialType)}
           className={inputStyle}
         >
@@ -163,7 +156,7 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
           </label>
           <textarea
             id="content"
-            name="content" // 'name' penting untuk FormData
+            name="content"
             rows={4}
             defaultValue={initialData?.type === type ? initialData?.content : ''}
             className={inputStyle}
@@ -172,7 +165,6 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
           />
         </div>
       ) : (
-      // Konten (File)
         <div>
           <label htmlFor="file" className={labelStyle}>
             {getFileUploadLabel(type)}
@@ -180,14 +172,13 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
           <input
             type="file"
             id="file"
-            name="file" // 'name' penting untuk FormData
-            key={fileKey} // Gunakan 'key' untuk mereset
+            name="file"
+            key={fileKey}
             className={`${inputStyle} file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer`}
             accept={getAcceptableFileTypes(type)}
-            // 'required' hanya jika kita membuat materi BARU
             required={!initialData} 
           />
-          {initialData && <p className="text-xs text-gray-500 mt-2">Kosongkan jika tidak ingin mengubah file.</p>}
+          {initialData && <p className="text-xs text-gray-500 mt-2">Kosongkan jika tidak ingin mengubah file yang sudah ada.</p>}
         </div>
       )}
 

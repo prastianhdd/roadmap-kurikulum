@@ -2,12 +2,10 @@
 
 import styles from '@/app/page.module.css';
 
-// Komponen helper untuk satu kartu mata kuliah skeleton
 const SkeletonCourseCard = () => (
   <div className="w-full p-4 rounded-lg bg-gray-200 h-14"></div>
 );
 
-// Komponen helper untuk satu kolom semester
 const SkeletonSemesterColumn = () => (
   <div className={styles.semesterColumn}>
     {/* Header Semester */}

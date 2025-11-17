@@ -6,12 +6,12 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import CourseMaterials from '@/components/CourseMaterials';
 
-// Pemetaan dari nama kategori ke kelas warna Tailwind
+
 const categoryColorMap: { [key: string]: string } = {
-  green: 'from-green-700 to-green-600', //
+  green: 'from-green-700 to-green-600', 
   blue: 'from-blue-800 to-blue-700',
-  yellow: 'from-yellow-600 to-yellow-500', //
-  red: 'from-red-700 to-red-600', //
+  yellow: 'from-yellow-600 to-yellow-500', 
+  red: 'from-red-700 to-red-600', 
 };
 const defaultColor = 'from-gray-800 to-gray-600';
 
@@ -26,7 +26,6 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
   const bannerColor = categoryColorMap[course.category] || defaultColor;
 
   return (
-    // Latar belakang abu-abu muda untuk seluruh halaman
     <div className="bg-slate-50 min-h-screen">
       
       {/* === HERO BANNER (HANYA BANNER) === */}

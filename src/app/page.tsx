@@ -1,20 +1,15 @@
 // src/app/page.tsx
 
 import styles from './page.module.css';
-import { getRoadmapData } from '@/lib/data'; // 1. Import fungsi data Anda
-import RoadmapGrid from '@/components/RoadmapGrid'; // 2. Buat komponen client baru
+import { getRoadmapData } from '@/lib/data'; 
+import RoadmapGrid from '@/components/RoadmapGrid'; 
 
-// 3. Ubah fungsi menjadi 'async'
+
 export default async function Home() {
   
-  // 4. Ambil data langsung di server
   const roadmapData = await getRoadmapData();
 
   const totalSKS = roadmapData.reduce((acc, semester) => acc + semester.sks, 0);
-
-  // HAPUS: useEffect, useState, dan state isLoading
-
-  // if (isLoading) { ... } // <-- Hapus blok 'if (isLoading)'
 
   return (
     <main className={styles.mainContainer}>

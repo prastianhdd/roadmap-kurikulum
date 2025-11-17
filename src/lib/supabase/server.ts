@@ -1,6 +1,5 @@
 // src/lib/supabase/server.ts
 
-// HAPUS 'type CookieOptions' dari baris ini
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 

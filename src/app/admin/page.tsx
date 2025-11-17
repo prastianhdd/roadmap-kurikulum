@@ -7,7 +7,7 @@ import MaterialList from '@/components/MaterialList';
 import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
-import { createMaterial } from './actions'; // 1. Import action baru
+import { createMaterial } from './actions'; 
 
 export default async function AdminPage() {
   const supabase = createSupabaseServer();
@@ -43,7 +43,6 @@ export default async function AdminPage() {
         </div>
 
         {/* Kartu 2: Form Upload (Sekarang 'MaterialForm') */}
-        {/* 2. Berikan action 'createMaterial' */}
         <MaterialForm
           courses={courses}
           action={createMaterial}

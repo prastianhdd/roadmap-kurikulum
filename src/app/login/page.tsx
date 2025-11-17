@@ -6,9 +6,8 @@ import { useRouter } from 'next/navigation'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { BookOpen } from 'lucide-react'
 
-// (Style ini diambil dari UploadForm Anda)
 const inputStyle = "w-full p-3 border border-slate-300 rounded-lg shadow-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors duration-200";
-const labelStyle = "block text-sm font-semibold text-gray-900 mb-2"; // Sedikit mengurangi margin bottom
+const labelStyle = "block text-sm font-semibold text-gray-900 mb-2"; 
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -33,7 +32,6 @@ export default function LoginPage() {
       setIsLoading(false);
     } else {
       setMessage('Login berhasil! Mengarahkan ke admin...');
-      // Arahkan ke admin, dan refresh layout server
       router.push('/admin');
       router.refresh();
     }
@@ -41,9 +39,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-slate-100 p-4">
-      {/* Container form sekarang menjadi "kartu" utama.
-        Branding (logo dan judul) dipindahkan ke dalam kartu.
-      */}
       <form 
         onSubmit={handleSignIn}
         className="w-full max-w-md bg-gradient-to-br from-green-100 to-slate-100 

@@ -1,11 +1,11 @@
 // src/components/RoadmapGrid.tsx
 'use client'; 
 
-import { useState } from 'react'; // 1. Import useState
+import { useState } from 'react'; 
 import { useRouter } from 'next/navigation';
 import { Course, RoadmapData } from '@/lib/types';
 import styles from '@/app/page.module.css';
-import { ChevronDown } from 'lucide-react'; // 2. Import ikon panah
+import { ChevronDown } from 'lucide-react'; 
 
 const categoryColorMap: { [key: string]: string } = {
   blue: styles.colorBlue,
