@@ -25,10 +25,10 @@
   @apply text-center mb-12;
 }
 .mainTitle {
-  @apply text-4xl font-extrabold text-blue-800 mb-4;
+  @apply text-3xl md:text-4xl font-extrabold text-blue-800 mb-4;
 }
 .subTitle {
-  @apply text-xl text-blue-900;
+  @apply text-lg md:text-xl text-blue-900;
 }
 
 .roadmapContainer {
@@ -47,23 +47,23 @@
 }
 
 .semesterHeader {
-  @apply bg-gradient-to-r from-blue-800 to-blue-700 text-white p-3 py-4 shadow-md;
+ @apply bg-gradient-to-r from-blue-800 to-blue-700 text-white p-3 md:p-4 shadow-md;
   @apply rounded-lg;
   @apply w-full;
   @apply flex justify-between items-center; 
   @apply cursor-pointer transition-colors hover:bg-purple-700;
 }
 .semesterTitle {
-  @apply text-lg font-bold;
+  @apply text-base md:text-lg font-bold;
 }
 .semesterSKS {
-  @apply text-sm;
+  @apply text-xs md:text-sm;
 }
 
 .courseList {
-  @apply space-y-2 pt-3;
+  @apply space-y-2 pt-2 md:pt-3;
 }
 
 .courseCard {
-  @apply w-full p-4 rounded-lg text-white text-sm shadow-md cursor-pointer transition-transform hover:scale-105;
+  @apply w-full p-3 md:p-4 rounded-lg text-white text-sm shadow-md cursor-pointer transition-transform hover:scale-105;
 }

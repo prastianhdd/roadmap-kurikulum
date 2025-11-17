@@ -32,7 +32,7 @@ interface CourseMaterialsProps {
 
 export default function CourseMaterials({ materials }: CourseMaterialsProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 md:space-y-4"> 
       {materials.length > 0 ? (
         materials.map((material) => {
           return (
@@ -43,7 +43,7 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
               rel="noopener noreferrer"
               onClick={(e) => !isClickable(material.type) && e.preventDefault()}
               className={`
-                flex items-center p-4 bg-white rounded-lg border border-gray-200 shadow-sm
+                flex items-center p-3 md:p-4 bg-white rounded-lg border border-gray-200 shadow-sm
                 transition-all duration-200
                 ${isClickable(material.type) 
                   ? 'hover:shadow-md hover:border-blue-300 cursor-pointer' 
@@ -51,22 +51,21 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
                 }
               `}
             >
-              {/* === IKON DI KIRI (MENGGUNAKAN <Image>) === */}
-              <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg mr-4 bg-slate-100 border border-slate-200">
+              {/* === IKON DI KIRI === */}
+              <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-lg mr-3 md:mr-4 bg-slate-100 border border-slate-200">
                 <Image
                   src={getIconPath(material.type)}
                   alt={`${material.type} icon`}
-                  width={28} 
-                  height={28}
+                  width={24} 
+                  height={24} 
                   className="object-contain"
                 />
               </div>
               
               {/* === TULISAN DI KANAN === */}
               <div className="flex-grow">
-                <p className="text-lg font-semibold text-gray-800">{material.title}</p>
+                <p className="text-base md:text-lg font-semibold text-gray-800">{material.title}</p>
                 
-                {/* --- DESKRIPSI DIPERBARUI --- */}
                 {material.type === 'TEXT' && (
                   <p className="text-sm text-gray-600 mt-1 italic">
                     &ldquo;{material.content}&rdquo;
@@ -97,12 +96,12 @@ export default function CourseMaterials({ materials }: CourseMaterialsProps) {
                     Link Google Drive. Klik untuk membuka di tab baru.
                   </p>
                 )}
-                {/* --- AKHIR DESKRIPSI --- */}
               </div>
             </a>
           );
         })
       ) : (
+
         <div className="p-6 bg-white rounded-lg border border-dashed border-gray-300">
           <p className="text-gray-500 italic text-center">
             Belum ada materi untuk mata kuliah ini.
