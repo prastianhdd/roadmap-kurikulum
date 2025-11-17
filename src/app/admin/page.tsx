@@ -1,47 +1,30 @@
 // src/app/admin/page.tsx
 
-import UploadForm from '@/components/UploadForm';
+// GANTI 'UploadForm' dengan 'MaterialForm'
+import MaterialForm from '@/components/MaterialForm';
 import LogoutButton from '@/components/LogoutButton';
 import MaterialList from '@/components/MaterialList'; 
 import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
-
-// HAPUS import 'Course' dari lib/types
-// import { Course } from '@/lib/types'; 
+import { createMaterial } from './actions'; // 1. Import action baru
 
 export default async function AdminPage() {
   const supabase = createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
-
   if (!user) {
     redirect('/login');
   }
 
   const materials = await prisma.material.findMany({
-    orderBy: {
-      id: 'desc',
-    },
-    include: {
-      course: { 
-        select: { name: true }
-      }
-    }
+    orderBy: { id: 'desc' },
+    include: { course: { select: { name: true } } }
   });
 
-  // --- PERUBAHAN DI SINI ---
-  // Kita tidak perlu tipe 'Course[]' lagi.
-  // Kita hanya mengambil 'id' dan 'name' untuk dropdown.
   const courses = await prisma.course.findMany({
-    select: { // Gunakan 'select' untuk optimasi
-      id: true,
-      name: true
-    },
-    orderBy: {
-      semesterId: 'asc'
-    }
+    select: { id: true, name: true },
+    orderBy: { semesterId: 'asc' }
   });
-  // --- AKHIR PERUBAHAN ---
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -59,9 +42,13 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        {/* Kartu 2: Form Upload */}
-        {/* 'courses' yang kita kirim sekarang adalah { id, name }[] */}
-        <UploadForm courses={courses} />
+        {/* Kartu 2: Form Upload (Sekarang 'MaterialForm') */}
+        {/* 2. Berikan action 'createMaterial' */}
+        <MaterialForm
+          courses={courses}
+          action={createMaterial}
+          buttonText="Simpan Materi Baru"
+        />
         
         {/* Kartu 3: Daftar Materi */}
         <MaterialList materials={materials} />
