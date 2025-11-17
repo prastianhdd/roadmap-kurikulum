@@ -1,16 +1,9 @@
 // src/app/loading.tsx
 
-// Ini adalah komponen sederhana, Anda bisa membuatnya lebih canggih
-// dengan 'skeleton' (garis-garis abu-abu)
+import RoadmapSkeleton from "@/components/skeletons/RoadmapSkeleton";
+
+// Ganti konten file ini sepenuhnya
 export default function Loading() {
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <p className="text-lg text-gray-500">Memuat data...</p>
-      
-      {/* Atau gunakan spinner Tailwind: */}
-      {/* <div 
-        className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
-      ></div> */}
-    </div>
-  );
+  // Tampilkan skeleton roadmap saat memuat halaman utama
+  return <RoadmapSkeleton />;
 }
