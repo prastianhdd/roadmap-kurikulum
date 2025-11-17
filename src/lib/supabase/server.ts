@@ -1,5 +1,7 @@
 // src/lib/supabase/server.ts
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+
+// HAPUS 'type CookieOptions' dari baris ini
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 export function createSupabaseServer() {
@@ -13,6 +15,7 @@ export function createSupabaseServer() {
         get(name: string) {
           return cookieStore.get(name)?.value
         },
+        
       },
     }
   )
