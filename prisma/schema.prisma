@@ -37,6 +37,7 @@ model Material {
   type     String
   // URL untuk PDF/LINK/IMAGE, atau konten langsung untuk TEXT
   content  String
+  storagePath String?
   course   Course   @relation(fields: [courseId], references: [id])
   courseId Int
 }

@@ -20,18 +20,18 @@ export async function POST(request: Request) {
     const courseId = parseInt(formData.get('courseId') as string, 10);
     const file = formData.get('file') as File | null;
     
-    // Default content adalah teks (untuk 'TEXT' atau 'LINK')
     let content = formData.get('content') as string;
+    let storagePath: string | null = null; // 1. Variabel untuk menyimpan path file
 
-    // Jika tipenya adalah file (PDF/IMAGE)
-    if ((type === 'PDF' || type === 'IMAGE') && file) {
+    // 2. Logika diperbarui untuk mencakup 'WORD'
+    const isFileBased = type === 'PDF' || type === 'IMAGE' || type === 'WORD';
+
+    if (isFileBased && file) {
       
-      // 1. Tentukan nama bucket dan path file di Supabase Storage
-      // GANTI 'materials' DENGAN NAMA BUCKET ANDA DI SUPABASE
-      const bucketName = 'materials'; 
+      const bucketName = 'materials'; // Pastikan nama bucket Anda 'materials'
       const filePath = `uploads/${courseId}/${Date.now()}-${file.name}`;
 
-      // 2. Upload file ke Supabase Storage
+      // Upload file ke Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file);
@@ -41,26 +41,27 @@ export async function POST(request: Request) {
         throw new Error(`Gagal upload file: ${uploadError.message}`);
       }
 
-      // 3. Dapatkan URL publik file yang baru di-upload
+      // Dapatkan URL publik file
       const { data } = supabase.storage
         .from(bucketName)
         .getPublicUrl(filePath);
 
-      // Simpan URL publik ini sebagai 'content'
       content = data.publicUrl;
+      storagePath = filePath; // 3. Simpan path file-nya
       
-    } else if (type === 'PDF' || type === 'IMAGE') {
-      // Jika tipe adalah file tapi tidak ada file yang di-upload
-      return NextResponse.json({ message: 'File dibutuhkan untuk tipe PDF/IMAGE' }, { status: 400 });
+    } else if (isFileBased && !file) {
+      // Jika tipe file tapi tidak ada file
+      return NextResponse.json({ message: `File dibutuhkan untuk tipe ${type}` }, { status: 400 });
     }
 
-    // 4. Simpan metadata ke Database (PostgreSQL) via Prisma
+    // 4. Simpan metadata (termasuk storagePath) ke Database
     const newMaterial = await prisma.material.create({
       data: {
         title: title,
         type: type,
-        content: content, // Ini adalah URL (jika PDF/IMAGE/LINK) atau teks (jika TEXT)
+        content: content, 
         courseId: courseId,
+        storagePath: storagePath, // 5. Simpan path-nya ke DB
       },
     });
 
@@ -68,7 +69,6 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error("Gagal membuat materi baru:", error);
-    // Cek jika error adalah object dengan properti message
     const errorMessage = (error instanceof Error) ? error.message : "Terjadi kesalahan internal";
     return NextResponse.json({ message: "Gagal memproses request", error: errorMessage }, { status: 500 });
   }
