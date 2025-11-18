@@ -17,6 +17,8 @@ model Semester {
   sks    Int      // Total SKS di semester ini
   order  Int      @unique // Untuk pengurutan (1, 2, 3, ...)
   courses Course[]
+
+  @@map("semester") // Mapping ke tabel lowercase 'semester'
 }
 
 // Model untuk Mata Kuliah
@@ -27,21 +29,23 @@ model Course {
   semester   Semester   @relation(fields: [semesterId], references: [id])
   semesterId Int
   materials  Material[]
+
+  @@map("course") // Mapping ke tabel lowercase 'course'
 }
 
 // Model untuk Materi Pembelajaran
 model Material {
-  id       Int    @id @default(autoincrement())
-  title    String
+  id           Int    @id @default(autoincrement())
+  title        String
   // Tipe materi: 'PDF', 'LINK', 'TEXT', 'IMAGE', 'WORD', 'DRIVE'
-  type     String
+  type         String
   // URL untuk PDF/LINK/IMAGE, atau konten langsung untuk TEXT
-  content  String
+  content      String
   
-  // === TAMBAHKAN KOLOM INI ===
-  storagePath String?  // Menyimpan path file di Supabase Storage, opsional
-  // ==========================
+  storagePath  String?  // Menyimpan path file di Supabase Storage, opsional
 
   course   Course @relation(fields: [courseId], references: [id])
   courseId Int
+
+  @@map("material") // Mapping ke tabel lowercase 'material'
 }
