@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { Expo } from 'expo-server-sdk'; // Import Library Expo
 
 function createSupabaseServerClient() {
   const cookieStore = cookies()
@@ -22,6 +23,8 @@ function createSupabaseServerClient() {
     }
   )
 }
+
+// Client Admin dengan Service Key (Bisa bypass RLS untuk baca token)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
@@ -31,6 +34,54 @@ type FormState = {
   success: boolean;
   message: string;
 };
+
+// Fungsi Helper untuk Kirim Notifikasi
+async function sendPushNotifications(courseName: string, materialTitle: string, courseId: number) {
+  // 1. Inisialisasi Expo SDK
+  let expo = new Expo();
+
+  // 2. Ambil semua token user dari Supabase
+  // (Pastikan tabel 'user_push_tokens' sudah dibuat di Supabase sesuai panduan sebelumnya)
+  const { data: tokens, error } = await supabaseAdmin
+    .from('user_push_tokens')
+    .select('token');
+
+  if (error || !tokens) {
+    console.error('Gagal mengambil push token:', error);
+    return;
+  }
+
+  // 3. Siapkan pesan
+  let messages = [];
+  for (let user of tokens) {
+    const pushToken = user.token;
+    
+    // Cek validitas token
+    if (!Expo.isExpoPushToken(pushToken)) {
+      console.error(`Push token tidak valid: ${pushToken}`);
+      continue;
+    }
+
+    messages.push({
+      to: pushToken,
+      sound: 'default',
+      title: '📚 Materi Baru!',
+      body: `Materi "${materialTitle}" baru saja ditambahkan di mata kuliah ${courseName}.`,
+      data: { courseId: courseId }, // Data untuk navigasi otomatis di HP nanti
+    });
+  }
+
+  // 4. Kirim pesan secara bertahap (Chunking)
+  let chunks = expo.chunkPushNotifications(messages);
+  for (let chunk of chunks) {
+    try {
+      let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+      console.log('Notifikasi terkirim:', ticketChunk);
+    } catch (error) {
+      console.error('Gagal mengirim notifikasi:', error);
+    }
+  }
+}
 
 export async function createMaterial(prevState: FormState, formData: FormData): Promise<FormState> {
   const supabase = createSupabaseServerClient()
@@ -71,6 +122,7 @@ export async function createMaterial(prevState: FormState, formData: FormData): 
       return { success: false, message: `File dibutuhkan untuk tipe ${type}` };
     }
 
+    // 1. Simpan materi ke Database
     await prisma.material.create({
       data: {
         title,
@@ -80,9 +132,22 @@ export async function createMaterial(prevState: FormState, formData: FormData): 
         storagePath,
       },
     });
+
+    // 2. Ambil nama Course untuk pesan notifikasi
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+      select: { name: true }
+    });
+
+    // 3. Panggil fungsi kirim notifikasi (Fire & Forget - tidak perlu tunggu selesai)
+    if (course) {
+      sendPushNotifications(course.name, title, courseId).catch(err => 
+        console.error('Background notification error:', err)
+      );
+    }
     
     revalidatePath('/admin'); 
-    return { success: true, message: 'Materi baru berhasil ditambahkan!' };
+    return { success: true, message: 'Materi berhasil disimpan & notifikasi dikirim!' };
 
   } catch (error) {
     const errorMessage = (error instanceof Error) ? error.message : "Terjadi kesalahan";
@@ -91,6 +156,9 @@ export async function createMaterial(prevState: FormState, formData: FormData): 
 }
 
 export async function updateMaterial(materialId: number, prevState: FormState, formData: FormData): Promise<FormState> {
+  // ... (Biarkan kode updateMaterial sama seperti sebelumnya, tidak perlu diubah)
+  // Kecuali Anda ingin notifikasi saat update juga, Anda bisa memanggil sendPushNotifications di sini.
+  
   const supabase = createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -163,8 +231,8 @@ export async function updateMaterial(materialId: number, prevState: FormState, f
   }
 }
 
-// 4. FUNGSI deleteMaterial (Sedikit update)
 export async function deleteMaterial(materialId: number) {
+  // ... (Kode deleteMaterial tetap sama)
   const supabase = createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
