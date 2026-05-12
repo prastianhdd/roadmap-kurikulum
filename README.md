@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/icons/ilkom.png" alt="Peta Kurikulum" width="320" height="180" />
+<img src="public/icons/ilkom.png" alt="Peta Kurikulum" width="600" height="" />
 
 # Peta Kurikulum Ilmu Komputer
 
