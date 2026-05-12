@@ -68,13 +68,13 @@ function SubmitButton({ text }: { text: string }) {
 export default function MaterialForm({ courses, action, initialData, buttonText }: MaterialFormProps) {
   const initialState: FormState = { success: false, message: '' };
   const [state, formAction] = useFormState(action, initialState);
-  const [type, setType] = useState<MaterialType>(initialData?.type as MaterialType || 'LINK');
-  const [fileKey, setFileKey] = useState(Date.now()); 
+  const [type, setType] = useState<MaterialType>(initialData?.type as MaterialType || 'PDF');
+  const [fileKey, setFileKey] = useState(Date.now());
   useEffect(() => {
-    if (state.success && !initialData) { 
+    if (state.success && !initialData) {
       (document.getElementById('material-form') as HTMLFormElement)?.reset();
-      setType('LINK');
-      setFileKey(Date.now()); 
+      setType('PDF');
+      setFileKey(Date.now());
     }
   }, [state, initialData]);
 
@@ -139,10 +139,10 @@ export default function MaterialForm({ courses, action, initialData, buttonText 
           onChange={(e) => setType(e.target.value as MaterialType)}
           className={inputStyle}
         >
+          <option value="PDF">PDF (File)</option>
           <option value="LINK">LINK (Tautan Eksternal)</option>
           <option value="DRIVE">DRIVE (Link Google Drive)</option>
           <option value="TEXT">TEXT (Teks Singkat)</option>
-          <option value="PDF">PDF (File)</option>
           <option value="IMAGE">IMAGE (File)</option>
           <option value="WORD">WORD (File Dokumen)</option>
         </select>
