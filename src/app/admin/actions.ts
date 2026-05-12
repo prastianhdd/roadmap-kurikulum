@@ -203,20 +203,21 @@ export async function updateMaterial(materialId: number, prevState: FormState, f
       data: {
         title,
         type,
-        content, 
+        content,
         courseId,
         storagePath,
       },
     });
 
-    revalidatePath('/admin'); 
-    revalidatePath(`/course/${courseId}`); 
-    redirect('/admin');
+    revalidatePath('/admin');
+    revalidatePath(`/course/${courseId}`);
 
   } catch (error) {
     const errorMessage = (error instanceof Error) ? error.message : "Terjadi kesalahan";
     return { success: false, message: errorMessage };
   }
+
+  redirect('/admin');
 }
 
 export async function deleteMaterial(materialId: number) {
