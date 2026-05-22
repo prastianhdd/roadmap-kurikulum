@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/icons/ilkom.png" alt="Peta Kurikulum" width="320" height="180" />
+<img src="public/icons/ilkom.png" alt="Peta Kurikulum" width="600" height="" />
 
 # Peta Kurikulum Ilmu Komputer
 
@@ -15,7 +15,7 @@ _Dari Semester 1 sampai Semester 8 — satu klik, semua materi ada._
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-[**Live Demo**](#) · [**Laporkan Bug**](https://github.com/prastianhdd/roadmap-kurikulum/issues) · [**Request Fitur**](https://github.com/prastianhdd/roadmap-kurikulum/issues)
+[**Live Demo**](https://ilmukomputer.web.id/) · [**Laporkan Bug**](https://github.com/prastianhdd/roadmap-kurikulum/issues) · [**Request Fitur**](https://github.com/prastianhdd/roadmap-kurikulum/issues)
 
 </div>
 
